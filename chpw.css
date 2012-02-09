@@ -1,0 +1,35 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+}
+
+.input {
+	border: 1px solid #006;
+	background: #ffc;
+}
+
+.input:hover {
+    border: 1px solid #f00;
+    background: #ff6;
+}
+
+.button {
+	border: 1px solid #006;
+	background: #9cf;
+}
+
+.button:hover {
+    border: 1px solid #f00;
+    background: #eef;
+}
+
+label {
+    display: block;
+    width: 150px;
+    float: left;
+    margin: 2px 4px 6px 4px;
+    text-align: right;
+}
+br { clear: left; }
