@@ -31,6 +31,8 @@ my $base_dn = $conf->[0]->{base_dn} || 'dc=local';
 my $search_filter = $conf->[0]->{search_filter} || '(!(userAccountControl:1.2.840.113556.1.4.803:=2))';
 my $mesg;
 
+my $pwpolicy = $conf->[0]->{password_policy} || 'At least 8 characters containing at lest 1 upper case and 1 lower case character and at least 1 number.';
+
 package ADAuth;
 use constant PWCH_NEXT_LOGON => 0;
 use constant NOPWCH_NEXT_LOGON => -1;
@@ -198,6 +200,9 @@ if ($form{'op'} eq 'submit') {
 		print "<input type='submit' class='button' name='submit' value='Login'/>\n";
 		print "<input type='reset'  class='button'               value='Reset Form'/>\n";
 		print "</form>\n";
+		print '<p align="left">';
+		print "<b>Password policy</b>: $pwpolicy";
+		print '</p>';
 	} else {
 		# bind as dummy to lookup the user's DN
 		my $ldap = Net::LDAP->new($host)  or  die "$@";
