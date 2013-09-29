@@ -31,7 +31,17 @@ my $base_dn = $conf->[0]->{base_dn} || 'dc=local';
 my $search_filter = $conf->[0]->{search_filter} || '(!(userAccountControl:1.2.840.113556.1.4.803:=2))';
 my $mesg;
 
-my $pwpolicy = $conf->[0]->{password_policy} || 'At least 8 characters containing at lest 1 upper case and 1 lower case character and at least 1 number.';
+my $password_policy = $conf->[0]->{password_policy} || qq{
+<ul>
+<li>Not contain the user's account name or parts of the user's full name<br/>
+that exceed two consecutive characters</li>
+<li>Be at least six characters in length</li>
+<li>Contain characters from three of the following four categories:</li>
+<li>English uppercase characters (A through Z)</li>
+<li>English lowercase characters (a through z)</li>
+<li>Base 10 digits (0 through 9)</li>
+<li>Non-alphabetic characters (for example, !, $, #, %)</li>
+};
 
 package ADAuth;
 use constant PWCH_NEXT_LOGON => 0;
@@ -138,7 +148,7 @@ my $cgi = new CGI::Lite;
 
 my %form = $cgi->parse_form_data;
 $ENV{'REMOTE_USER'} = $form{'username'};
-$form{'op'} = undef unless $form{'op'};
+$form{'op'} = '' unless $form{'op'};
 
 if ($form{'op'} eq 'submit') {
 	my $user_dn = $form{'dn'};
@@ -200,9 +210,6 @@ if ($form{'op'} eq 'submit') {
 		print "<input type='submit' class='button' name='submit' value='Login'/>\n";
 		print "<input type='reset'  class='button'               value='Reset Form'/>\n";
 		print "</form>\n";
-		print '<p align="left">';
-		print "<b>Password policy</b>: $pwpolicy";
-		print '</p>';
 	} else {
 		# bind as dummy to lookup the user's DN
 		my $ldap = Net::LDAP->new($host)  or  die "$@";
@@ -235,6 +242,9 @@ if ($form{'op'} eq 'submit') {
 		print "<input type='submit' name='submit' value='Change Password' class='button'>\n";
 		print "<input class='button' type='reset' value='Reset Form'>\n";
 		print "</form>\n";
+
+		print "<p>&nbsp;Password policy:<br/>";
+		print $password_policy . "\n</p>";
 	}
 }
 
