@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-# Oliver Falk <oliver@linux-kernel.at>, 2011 - 2012
+# Oliver Falk <oliver@linux-kernel.at>, 2011 - 2013
 # Based on Evan Hoffmans (evanhoffman@evanhoffman.com)
 # script from 13 January, 2010
 #
