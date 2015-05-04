@@ -1,6 +1,10 @@
 chpw - Simple Active Directory Password Change Interface
 ========================================================
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ofalk/chpw/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+========================================================
+
 chpw is a simple web interface for letting users change their AD (Microsoft
 Active Directory) passwords in a self-service manner.
 
