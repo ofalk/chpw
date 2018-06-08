@@ -1,4 +1,8 @@
-    <FilesMatch "\.(yml|conf)$">
-        Order Deny,Allow
-        Deny From All
-    </FilesMatch>
+<FilesMatch "\.(yml|conf)$">
+    Order Deny,Allow
+    Deny From All
+</FilesMatch>
+<FilesMatch "\.git.*">
+    Order Deny,Allow
+    Deny From All
+</FilesMatch>

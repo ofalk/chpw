@@ -32,6 +32,8 @@ my $search_filter = $conf->[0]->{search_filter} || '(!(userAccountControl:1.2.84
 my $mesg;
 
 my $password_policy = $conf->[0]->{password_policy} || qq{
+<br/>
+Password policy:
 <ul>
 <li>Not contain the user's account name or parts of the user's full name<br/>
 that exceed two consecutive characters</li>
@@ -41,6 +43,7 @@ that exceed two consecutive characters</li>
 <li>English lowercase characters (a through z)</li>
 <li>Base 10 digits (0 through 9)</li>
 <li>Non-alphabetic characters (for example, !, $, #, %)</li>
+</ul>
 };
 
 package ADAuth;
@@ -128,10 +131,14 @@ package main;
 my $charmap = Unicode::Map8->new('latin1') or die;
 
 print <<EOF;
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<title>Active Directory Password Changer</title>
-<link rel="stylesheet" href="chpw.css" type="text/css" media="screen" />
+    <title>Active Directory Password Changer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="chpw.css" type="text/css" media="screen" />
 </head>
 <body>
 EOF
@@ -221,31 +228,40 @@ if ($form{'op'} eq 'submit') {
 		my $err = ADAuth->auth_user($user_dn, $form{'password'});
 		die "Authentication error: $err" if $err;
 
-		print "\n<!-- LDAP DN for user '$ENV{REMOTE_USER}': <b>$user_dn</b> -->\n";
-		print "<p>&nbsp;</p>\n";
-
+                print "<div style='margin-top:5px; margin-left:5px;'>";
+		print "<div style='margin-right:20px; float:right;'><a href='$ENV{REQUEST_URI}'>Return to login</a></div>\n";
+		print "<div align='left' style='float:auto;'>\n";
 		print "<form action='$ENV{REQUEST_URI}' METHOD='POST'>\n";
-		print "<input type='hidden' name='op' value='submit'>\n";
-		print "<input type='hidden' name='dn' value='$user_dn'>\n";
-		print "<input type='hidden' name='username' value='$ENV{REMOTE_USER}'>\n";
+		# print "\n<!-- LDAP DN for user '$ENV{REMOTE_USER}': <b>$user_dn</b> -->\n";
+		print "<input type='hidden' name='op' value='submit'/>\n";
+		print "<input type='hidden' name='dn' value='$user_dn'/>\n";
+		print "<input type='hidden' name='username' value='$ENV{REMOTE_USER}'/>\n";
 
 		print "<label for='password'>Current password for <b>$ENV{REMOTE_USER}</b> <i>for confirmation</i>:</label>\n";
-		print "<input class='input' id='password' type='password' name='oldpassword' size='30'><br/>\n";
+		print "<input class='input' id='password' type='password' name='oldpassword' size='30'/><br/>\n";
 
 		print "<label for='newpw1'>New password for <b>$ENV{REMOTE_USER}</b>:</label>\n";
-		print "<input class='input' id='newpw1' type='password' name='newpw1' size='30'><br/>\n";
+		print "<input class='input' id='newpw1' type='password' name='newpw1' size='30'/><br/>\n";
 
 		print "<label for='newpw2'>New password for <b>$ENV{REMOTE_USER}</b> <i>again</i>:</label>\n";
-		print "<input class='input' type='password' name='newpw2' size='30'><br/>\n";
+		print "<input class='input' type='password' name='newpw2' size='30'/><br/>\n";
 
 		print "<label>&nbsp;</label>\n";
-		print "<input type='submit' name='submit' value='Change Password' class='button'>\n";
-		print "<input class='button' type='reset' value='Reset Form'>\n";
+		print "<input type='submit' name='submit' value='Change Password' class='button'/>\n";
+		print "<input class='button' type='reset' value='Reset Form'/>\n";
 		print "</form>\n";
+		print "</div>\n";
 
-		print "<p>&nbsp;Password policy:<br/>";
-		print $password_policy . "\n</p>";
+		print "<div>";
+		print $password_policy . "\n";
+		print "</div>\n";
+		print "</div>\n";
 	}
 }
 
+print <<EOJS;
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+EOJS
 print '</body></html>';
